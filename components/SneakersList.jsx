@@ -19,9 +19,13 @@ const getSneakers = async () => {
 
 export default function SneakersList() {
   const [selectedColor, setSelectedColor] = useState('All');
+  const [selectedType, setSelectedType] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [sneakers, setSneakers] = useState([]);
   const [filteredSneakers, setFilteredSneakers] = useState([]);
   const [colors, setColors] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [categories, setCategories] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -29,27 +33,70 @@ export default function SneakersList() {
       setSneakers(sneakers);
       const uniqueColors = Array.from(new Set(sneakers.map(sneaker => sneaker.color)));
       setColors(['All', ...uniqueColors]);
+      const uniqueTypes = Array.from(new Set(sneakers.map(sneaker => sneaker.type)));
+      setTypes(['All', ...uniqueTypes]);
+      const uniqueCategories = Array.from(new Set(sneakers.map(sneaker => sneaker.category)));
+      setCategories(['All', ...uniqueCategories]);
     };
     fetchData();
   }, []);
 
-  const filterSneakersByColor = (color) => {
-    if (color === 'All') {
-      setFilteredSneakers([]);
-    } else {
-      const filtered = sneakers.filter(sneaker => sneaker.color === color);
-      setFilteredSneakers(filtered);
+  const filterSneakers = () => {
+    let filtered = sneakers;
+    if (selectedColor !== 'All') {
+      filtered = filtered.filter(sneaker => sneaker.color === selectedColor);
     }
+    if (selectedType !== 'All') {
+      filtered = filtered.filter(sneaker => sneaker.type === selectedType);
+    }
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter(sneaker => sneaker.category === selectedCategory);
+    }
+    setFilteredSneakers(filtered);
+  }
+
+  const handleColorChange = (color) => {
     setSelectedColor(color);
   }
 
+  const handleTypeChange = (type) => {
+    setSelectedType(type);
+  }
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+  }
+
+  useEffect(() => {
+    filterSneakers();
+  }, [selectedColor, selectedType, selectedCategory, sneakers]);
+
   return (
     <div>
-      <select value={selectedColor} onChange={(e) => filterSneakersByColor(e.target.value)}>
-        {colors.map((color, index) => (
-          <option key={index} value={color}>{color}</option>
-        ))}
-      </select>
+      <div>
+        <label htmlFor="colorSelect">Color:</label>
+        <select id="colorSelect" value={selectedColor} onChange={(e) => handleColorChange(e.target.value)}>
+          {colors.map((color, index) => (
+            <option key={index} value={color}>{color}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="typeSelect">Type:</label>
+        <select id="typeSelect" value={selectedType} onChange={(e) => handleTypeChange(e.target.value)}>
+          {types.map((type, index) => (
+            <option key={index} value={type}>{type}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="categorySelect">Category:</label>
+        <select id="categorySelect" value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
+        </select>
+      </div>
 
       <div className="grid grid-cols-3 gap-4 ml-14 mr-14">
         {(filteredSneakers.length > 0 ? filteredSneakers : sneakers).map((t) => (
