@@ -114,12 +114,12 @@ function SneakerInfo({ sneakerId, onRemove }) {
   }
 
   return (
-    <div className='flex flex-row bg-slate-400'>
+    <div className='flex flex-row bg-slate-400 m-2'>
       <img className='h-32 w-32' src={sneaker.picture} alt={sneaker.name} />
       <div className='flex justify-center  flex-col m-4'>
         <p>{sneaker.title}</p>
         <p>${sneaker.price}</p>
-        <button onClick={handleRemove}>Remove</button>
+        <button className='bg-red-500 rounded-md cursor-pointer w-20' onClick={handleRemove}>Remove</button>
       </div>
     </div>
   );

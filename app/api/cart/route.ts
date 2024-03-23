@@ -1,7 +1,8 @@
-import connectMongoDB from "/libs/mongodb";
-import Cart from "/models/cart";
+import connectMongoDB from '../../../libs/mongodb';
+import Cart from '../../../models/cart';
 import { NextResponse } from "next/server";
-import Sneaker from "/models/sneaker";
+import Sneaker from '../../../models/sneaker';
+
 
 export async function GET() {
     await connectMongoDB();
