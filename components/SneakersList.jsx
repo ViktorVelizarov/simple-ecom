@@ -67,6 +67,24 @@ export default function SneakersList() {
     setSelectedCategory(category);
   }
 
+  const addToCart = async (sneakerId) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ sneakerId })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add sneaker to cart");
+      }
+    } catch (error) {
+      console.error("Error adding sneaker to cart:", error);
+    }
+  }
+
   useEffect(() => {
     filterSneakers();
   }, [selectedColor, selectedType, selectedCategory, sneakers]);
@@ -120,6 +138,8 @@ export default function SneakersList() {
                 <p className='mt-3 font-semibold'>Price: ${t.price}</p>
               )}
             </div>
+            <button onClick={() => addToCart(t._id)}>Add to cart</button>
+
           </div>
         ))}
       </div>

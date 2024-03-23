@@ -29,8 +29,11 @@ export async function POST(request: Request) {
             cart = new Cart();
         }
 
+        // Extract sneaker ID from request body
+        const requestData = await request.json();
+        const sneakerId = requestData.sneakerId;
+
         // Add the specific sneaker to the cart
-        const sneakerId = '65fc8363a640d9500ea26e06'; // ID of the sneaker to add
         const sneaker = await Sneaker.findById(sneakerId);
 
         if (sneaker) {
