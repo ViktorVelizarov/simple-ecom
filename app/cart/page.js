@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Page() {
   const [cart, setCart] = useState([]);
@@ -108,17 +108,28 @@ function SneakerInfo({ sneakerId, onRemove }) {
     }
   };
 
-
   if (!sneaker) {
     return <div>Loading...</div>;
   }
+
+  // Calculate discounted price if there's a sale
+  const discountedPrice = sneaker.sale !== 'no' ? 
+    (sneaker.price - (sneaker.price * sneaker.sale / 100)).toFixed(2) :
+    null;
 
   return (
     <div className='flex flex-row bg-slate-400 m-2'>
       <img className='h-32 w-32' src={sneaker.picture} alt={sneaker.name} />
       <div className='flex justify-center  flex-col m-4'>
-        <p>{sneaker.title}</p>
-        <p>${sneaker.price}</p>
+        <p className='font-bold'>{sneaker.title}</p>
+        {discountedPrice ? (
+          <div className='flex'>
+            <p className='text-green-600 mr-2 font-semibold'>${discountedPrice}</p>
+            <p className='line-through text-gray-500'>${sneaker.price}</p>
+          </div>
+        ) : (
+          <p>${sneaker.price}</p>
+        )}
         <button className='bg-red-500 rounded-md cursor-pointer w-20' onClick={handleRemove}>Remove</button>
       </div>
     </div>

@@ -3,8 +3,7 @@ import SneakerList from "/components/SneakersList";
 
 export default function Home() {
   return (
-    <main >
-      hi
+    <main className="mt-9">
       <SneakerList/>
     </main>
   );

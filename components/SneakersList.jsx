@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const getSneakers = async () => {
   try {
@@ -26,7 +26,9 @@ export default function SneakersList() {
   const [colors, setColors] = useState([]);
   const [types, setTypes] = useState([]);
   const [categories, setCategories] = useState([]);
-  
+  const [showPopup, setShowPopup] = useState(false); // State for managing popup visibility
+  const popupRef = useRef(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const { sneakers } = await getSneakers();
@@ -40,6 +42,19 @@ export default function SneakersList() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowPopup(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupRef]);
 
   const filterSneakers = () => {
     let filtered = sneakers;
@@ -80,6 +95,14 @@ export default function SneakersList() {
       if (!response.ok) {
         throw new Error("Failed to add sneaker to cart");
       }
+
+      // Set showPopup to true to display the popup
+      setShowPopup(true);
+
+      // After 3 seconds, hide the popup
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     } catch (error) {
       console.error("Error adding sneaker to cart:", error);
     }
@@ -91,29 +114,39 @@ export default function SneakersList() {
 
   return (
     <div>
-      <div>
-        <label htmlFor="colorSelect">Color:</label>
-        <select id="colorSelect" value={selectedColor} onChange={(e) => handleColorChange(e.target.value)}>
-          {colors.map((color, index) => (
-            <option key={index} value={color}>{color}</option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label htmlFor="typeSelect">Type:</label>
-        <select id="typeSelect" value={selectedType} onChange={(e) => handleTypeChange(e.target.value)}>
-          {types.map((type, index) => (
-            <option key={index} value={type}>{type}</option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label htmlFor="categorySelect">Category:</label>
-        <select id="categorySelect" value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
-          {categories.map((category, index) => (
-            <option key={index} value={category}>{category}</option>
-          ))}
-        </select>
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div ref={popupRef} className="bg-white p-4 rounded-md">
+            Item added to cart
+          </div>
+        </div>
+      )}
+
+      <div className='flex flex-row ml-14 mr-14'>
+        <div className='bg-gray-400 p-3'>
+          <label htmlFor="colorSelect">Color:</label>
+          <select id="colorSelect" value={selectedColor} onChange={(e) => handleColorChange(e.target.value)}>
+            {colors.map((color, index) => (
+              <option key={index} value={color}>{color}</option>
+            ))}
+          </select>
+        </div>
+        <div className='bg-gray-400 p-3'>
+          <label htmlFor="typeSelect">Type:</label>
+          <select id="typeSelect" value={selectedType} onChange={(e) => handleTypeChange(e.target.value)}>
+            {types.map((type, index) => (
+              <option key={index} value={type}>{type}</option>
+            ))}
+          </select>
+        </div>
+        <div className='bg-gray-400 p-3'>
+          <label htmlFor="categorySelect">Category:</label>
+          <select id="categorySelect" value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>{category}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-3 gap-4 ml-14 mr-14">
@@ -138,7 +171,7 @@ export default function SneakersList() {
                 <p className='mt-3 font-semibold'>Price: ${t.price}</p>
               )}
             </div>
-            <button onClick={() => addToCart(t._id)}>Add to cart</button>
+            <button className='bg-green-500 p-2 rounded-md mt-3 font-semibold' onClick={() => addToCart(t._id)}>Add to cart</button>
 
           </div>
         ))}
