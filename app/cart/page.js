@@ -2,9 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 
+// Component for displaying the cart page
 export default function Page() {
+  // State variable to store the cart data
   const [cart, setCart] = useState([]);
 
+  // Effect hook to fetch cart data from the server
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -44,12 +47,15 @@ export default function Page() {
     }
   };
 
+  // JSX for rendering the component
   return (
     <div className='flex justify-center items-center m-20'>
       <div>
+        {/* Display a message if the cart is empty */}
         {cart.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
+          // Map over each sneaker in the cart and render SneakerInfo component
           cart.map((sneakerId) => (
             <SneakerInfo key={sneakerId} sneakerId={sneakerId} onRemove={removeFromCart} />
           ))
@@ -59,9 +65,12 @@ export default function Page() {
   );
 }
 
+// Component for displaying information about a single sneaker in the cart
 function SneakerInfo({ sneakerId, onRemove }) {
+  // State variable to store the sneaker data
   const [sneaker, setSneaker] = useState(null);
 
+  // Effect hook to fetch sneaker data from the server
   useEffect(() => {
     const fetchSneaker = async () => {
       try {
@@ -87,6 +96,7 @@ function SneakerInfo({ sneakerId, onRemove }) {
     fetchSneaker();
   }, [sneakerId]);
 
+  // Function to handle removing a sneaker from the cart
   const handleRemove = async () => {
     try {
       const response = await fetch('http://localhost:3000/api/cart', {
@@ -108,6 +118,7 @@ function SneakerInfo({ sneakerId, onRemove }) {
     }
   };
 
+  // JSX for rendering the component
   if (!sneaker) {
     return <div>Loading...</div>;
   }
@@ -122,6 +133,7 @@ function SneakerInfo({ sneakerId, onRemove }) {
       <img className='h-32 w-32' src={sneaker.picture} alt={sneaker.name} />
       <div className='flex justify-center  flex-col m-4'>
         <p className='font-bold'>{sneaker.title}</p>
+        {/* Display discounted price and original price with strike-through */}
         {discountedPrice ? (
           <div className='flex'>
             <p className='text-green-600 mr-2 font-semibold'>${discountedPrice}</p>
@@ -130,8 +142,9 @@ function SneakerInfo({ sneakerId, onRemove }) {
         ) : (
           <p>${sneaker.price}</p>
         )}
+        {/* Button to remove sneaker from cart */}
         <button className='bg-red-500 rounded-md cursor-pointer w-20' onClick={handleRemove}>Remove</button>
       </div>
     </div>
   );
-}
+        }
