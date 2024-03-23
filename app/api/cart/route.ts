@@ -49,3 +49,27 @@ export async function POST(request: Request) {
         return NextResponse.error();
     }
 }
+
+
+export async function DELETE(request: Request) {
+    await connectMongoDB();
+
+    try {
+        // Find the first cart
+        let cart = await Cart.findOne();
+
+        // Extract sneaker ID from request body
+        const requestData = await request.json();
+        const sneakerId = requestData.sneakerId;
+
+        // Remove the specific sneaker from the cart
+        cart.sneakers = cart.sneakers.filter(sneaker => sneaker._id.toString() !== sneakerId);
+
+        await cart.save();
+
+        return NextResponse.json({ cart });
+    } catch (error) {
+        console.error('Error removing sneaker from cart:', error);
+        return NextResponse.error();
+    }
+}
