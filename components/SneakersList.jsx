@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Function to fetch sneakers data from the server
 const getSneakers = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/sneakers");
+    const res = await fetch("/api/sneakers");
 
     if (!res.ok) {
       throw new Error("Failed to fetch sneakers");
@@ -92,7 +92,7 @@ export default function SneakersList() {
   // Function to add a sneaker to the cart
   const addToCart = async (sneakerId) => {
     try {
-      const response = await fetch("http://localhost:3000/api/cart", {
+      const response = await fetch("/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

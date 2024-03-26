@@ -11,7 +11,7 @@ export default function Page() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/cart');
+        const response = await fetch('/api/cart');
         if (!response.ok) {
           throw new Error('Failed to fetch cart');
         }
@@ -28,7 +28,7 @@ export default function Page() {
   // Function to remove a sneaker from the cart and update the cart state
   const removeFromCart = async (sneakerIdToRemove) => {
     try {
-      const response = await fetch('http://localhost:3000/api/cart', {
+      const response = await fetch('/api/cart', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ function SneakerInfo({ sneakerId, onRemove }) {
   useEffect(() => {
     const fetchSneaker = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/sneaker', {
+        const response = await fetch('/api/sneaker', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ function SneakerInfo({ sneakerId, onRemove }) {
   // Function to handle removing a sneaker from the cart
   const handleRemove = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/cart', {
+      const response = await fetch('/api/cart', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
